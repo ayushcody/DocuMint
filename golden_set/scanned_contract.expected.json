@@ -1,0 +1,18 @@
+{
+  "doc_type": "scanned_contract",
+  "page_count": 8,
+  "teds_threshold": 0.70,
+  "block_types": ["heading", "text", "signature"],
+  "tables": [],
+  "extraction": {
+    "agreement_title": "Services Agreement",
+    "effective_date": "2024-03-01",
+    "party_a": "Northwind LLC",
+    "party_b": "Contoso Ltd."
+  },
+  "expected_confidence_calibrated_min": 0.62,
+  "retrieval": {
+    "query": "termination clause",
+    "expected_page": 6
+  }
+}

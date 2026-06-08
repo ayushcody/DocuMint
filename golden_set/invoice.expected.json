@@ -1,0 +1,24 @@
+{
+  "doc_type": "invoice",
+  "page_count": 2,
+  "teds_threshold": 0.85,
+  "block_types": ["heading", "table", "text"],
+  "tables": [
+    {
+      "page": 1,
+      "html": "<table><tr><th>Item</th><th>Qty</th><th>Price</th></tr><tr><td>Professional services</td><td>1</td><td>4250.00</td></tr></table>",
+      "teds_threshold": 0.90
+    }
+  ],
+  "extraction": {
+    "invoice_number": "INV-912371",
+    "total": 4250.0,
+    "vendor_name": "Acme Corp",
+    "date": "2024-01-15"
+  },
+  "expected_confidence_calibrated_min": 0.75,
+  "retrieval": {
+    "query": "total amount due",
+    "expected_page": 1
+  }
+}

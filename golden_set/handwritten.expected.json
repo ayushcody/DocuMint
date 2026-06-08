@@ -1,0 +1,17 @@
+{
+  "doc_type": "handwritten",
+  "page_count": 2,
+  "teds_threshold": 0.60,
+  "block_types": ["heading", "text"],
+  "tables": [],
+  "extraction": {
+    "note_title": "Meeting Notes",
+    "author": "Sam Rivera",
+    "date": "2024-05-03"
+  },
+  "expected_confidence_calibrated_min": 0.50,
+  "retrieval": {
+    "query": "action items",
+    "expected_page": 2
+  }
+}

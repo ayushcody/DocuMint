@@ -1,0 +1,24 @@
+{
+  "doc_type": "sec_10k",
+  "page_count": 12,
+  "teds_threshold": 0.80,
+  "block_types": ["heading", "text", "table", "footer"],
+  "tables": [
+    {
+      "page": 4,
+      "html": "<table><tr><th>Fiscal Year</th><th>Revenue</th><th>Net Income</th></tr><tr><td>2024</td><td>1000000</td><td>125000</td></tr></table>",
+      "teds_threshold": 0.85
+    }
+  ],
+  "extraction": {
+    "company_name": "Example Holdings Inc.",
+    "form_type": "10-K",
+    "fiscal_year": "2024",
+    "total_revenue": 1000000.0
+  },
+  "expected_confidence_calibrated_min": 0.72,
+  "retrieval": {
+    "query": "risk factors revenue",
+    "expected_page": 2
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "doc_type": "phone_photo",
+  "page_count": 1,
+  "teds_threshold": 0.65,
+  "block_types": ["heading", "text", "table"],
+  "tables": [
+    {
+      "page": 1,
+      "html": "<table><tr><th>Description</th><th>Total</th></tr><tr><td>Receipt total</td><td>38.42</td></tr></table>",
+      "teds_threshold": 0.70
+    }
+  ],
+  "extraction": {
+    "merchant": "Corner Market",
+    "date": "2024-04-12",
+    "total": 38.42
+  },
+  "expected_confidence_calibrated_min": 0.58,
+  "retrieval": {
+    "query": "receipt total",
+    "expected_page": 1
+  }
+}

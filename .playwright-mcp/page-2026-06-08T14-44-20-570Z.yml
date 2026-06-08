@@ -1,0 +1,301 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation [ref=e4]:
+      - link "DocuMind AI" [ref=e5] [cursor=pointer]:
+        - /url: "#top"
+        - img [ref=e7]
+        - generic [ref=e11]: DocuMind AI
+      - generic [ref=e12]:
+        - link "Operations" [ref=e13] [cursor=pointer]:
+          - /url: "#operations"
+        - link "How it works" [ref=e14] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - link "Architecture" [ref=e15] [cursor=pointer]:
+          - /url: "#architecture"
+        - link "About" [ref=e16] [cursor=pointer]:
+          - /url: "#about"
+      - link "Open Studio" [ref=e17] [cursor=pointer]:
+        - /url: "#studio"
+        - text: Open Studio
+        - img [ref=e18]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Verifiable Document AI
+        - heading "DocuMind AI" [level=1] [ref=e23]
+        - paragraph [ref=e24]: Parse, extract, classify, split, and index documents with visual citations, calibrated confidence, and a debugger that shows exactly where each result came from.
+        - generic [ref=e25]:
+          - link "Try Parse Studio" [ref=e26] [cursor=pointer]:
+            - /url: "#studio"
+            - text: Try Parse Studio
+            - img [ref=e27]
+          - link "View Architecture" [ref=e29] [cursor=pointer]:
+            - /url: "#architecture"
+      - generic [ref=e31]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: PDF page
+          - generic [ref=e35]: canvas overlays
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - img [ref=e47]
+            - text: Verified JSON
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - generic [ref=e55]: "Invoice No: INV-912371"
+                - generic [ref=e56]: "0.91"
+              - generic [ref=e57]: "citation: page 1, bbox attached"
+            - generic [ref=e58]:
+              - generic [ref=e59]:
+                - generic [ref=e60]: "Vendor: Acme Corp"
+                - generic [ref=e61]: "0.88"
+              - generic [ref=e62]: "citation: page 1, bbox attached"
+            - generic [ref=e63]:
+              - generic [ref=e64]:
+                - generic [ref=e65]: "Total: $4,250.00"
+                - generic [ref=e66]: "0.85"
+              - generic [ref=e67]: "citation: page 1, bbox attached"
+          - generic [ref=e68]:
+            - generic [ref=e69]: RLS
+            - generic [ref=e70]: MinIO
+            - generic [ref=e71]: Qdrant
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - img [ref=e76]
+        - generic [ref=e79]: Every field has a citation
+      - generic [ref=e80]:
+        - img [ref=e82]
+        - generic [ref=e92]: Self-hostable BYOC stack
+      - generic [ref=e93]:
+        - img [ref=e95]
+        - generic [ref=e99]: RAG-ready visual page index
+    - generic [ref=e100]:
+      - generic [ref=e101]:
+        - paragraph [ref=e102]: Capabilities
+        - heading "One document pipeline for five product operations" [level=2] [ref=e103]
+      - generic [ref=e104]:
+        - article [ref=e105]:
+          - img [ref=e107]
+          - heading "Parse" [level=3] [ref=e114]
+          - paragraph [ref=e115]: Turn PDFs, scans, and images into clean LLM-ready text with page bboxes.
+        - article [ref=e116]:
+          - img [ref=e118]
+          - heading "Extract" [level=3] [ref=e121]
+          - paragraph [ref=e122]: Pull structured JSON from documents and attach citations to every field.
+        - article [ref=e123]:
+          - img [ref=e125]
+          - heading "Classify" [level=3] [ref=e129]
+          - paragraph [ref=e130]: Route documents into natural-language categories using semantic similarity.
+        - article [ref=e131]:
+          - img [ref=e133]
+          - heading "Split" [level=3] [ref=e136]
+          - paragraph [ref=e137]: Separate concatenated packets into logical documents and sections.
+        - article [ref=e138]:
+          - img [ref=e140]
+          - heading "Index" [level=3] [ref=e143]
+          - paragraph [ref=e144]: Build ColQwen2-powered visual RAG search over rendered document pages.
+    - generic [ref=e145]:
+      - generic [ref=e146]:
+        - paragraph [ref=e147]: How it works
+        - heading "From upload to verified output" [level=2] [ref=e148]
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - img [ref=e152]
+          - paragraph [ref=e155]: Step 1
+          - heading "Upload once" [level=3] [ref=e156]
+          - paragraph [ref=e157]: Originals are stored permanently in MinIO with workspace-scoped paths.
+        - generic [ref=e158]:
+          - img [ref=e160]
+          - paragraph [ref=e164]: Step 2
+          - heading "Run the agents" [level=3] [ref=e165]
+          - paragraph [ref=e166]: Intake, layout, OCR, assembly, and verifier work as a Celery pipeline.
+        - generic [ref=e167]:
+          - img [ref=e169]
+          - paragraph [ref=e174]: Step 3
+          - heading "Inspect visually" [level=3] [ref=e175]
+          - paragraph [ref=e176]: PDF.js canvas overlays show each block, confidence score, and citation.
+        - generic [ref=e177]:
+          - img [ref=e179]
+          - paragraph [ref=e183]: Step 4
+          - heading "Use the output" [level=3] [ref=e184]
+          - paragraph [ref=e185]: Send clean text, JSON, page citations, and RAG hits to your product.
+    - generic [ref=e186]:
+      - generic [ref=e187]:
+        - paragraph [ref=e188]: Architecture
+        - heading "Seven agents, one auditable path" [level=2] [ref=e189]
+      - generic [ref=e190]:
+        - article [ref=e191]:
+          - paragraph [ref=e192]: Agent 1
+          - heading "Intake & Anchoring" [level=3] [ref=e193]
+          - paragraph [ref=e194]: Rasterizes pages at 300 DPI and preserves native PDF text coordinates.
+        - article [ref=e195]:
+          - paragraph [ref=e196]: Agent 2
+          - heading "Layout Detection" [level=3] [ref=e197]
+          - paragraph [ref=e198]: Finds text, tables, figures, formulas, headers, and footers for routing.
+        - article [ref=e199]:
+          - paragraph [ref=e200]: Agent 3
+          - heading "Specialist Parsers" [level=3] [ref=e201]
+          - paragraph [ref=e202]: Routes simple regions, tables, scans, and handwriting to the right parser.
+        - article [ref=e203]:
+          - paragraph [ref=e204]: Agent 4
+          - heading "Assembly" [level=3] [ref=e205]
+          - paragraph [ref=e206]: Orders blocks, stitches tables, and builds the final document AST.
+        - article [ref=e207]:
+          - paragraph [ref=e208]: Agent 5
+          - heading "Verifier" [level=3] [ref=e209]
+          - paragraph [ref=e210]: Renders predicted output and compares it with crops using visual checks.
+        - article [ref=e211]:
+          - paragraph [ref=e212]: Agent 6
+          - heading "Schema Extraction" [level=3] [ref=e213]
+          - paragraph [ref=e214]: Produces structured fields with calibrated confidence and bbox citations.
+        - article [ref=e215]:
+          - paragraph [ref=e216]: Agent 7
+          - heading "Visual RAG" [level=3] [ref=e217]
+          - paragraph [ref=e218]: Indexes page renders with ColQwen2 multi-vectors and Qdrant MaxSim search.
+      - generic [ref=e219]:
+        - generic [ref=e220]:
+          - img [ref=e222]
+          - generic [ref=e226]: Workspace isolation
+        - generic [ref=e227]:
+          - img [ref=e229]
+          - generic [ref=e232]: Calibrated confidence
+        - generic [ref=e233]:
+          - img [ref=e235]
+          - generic [ref=e239]: Citations everywhere
+    - generic [ref=e240]:
+      - generic [ref=e241]:
+        - paragraph [ref=e242]: About
+        - heading "Built for teams that need document AI they can verify" [level=2] [ref=e243]
+      - generic [ref=e244]:
+        - generic [ref=e245]:
+          - paragraph [ref=e246]: DocuMind AI is designed for document-heavy teams that need more than raw OCR. Every parse block is traceable to a page region, every extracted value carries a citation, and every confidence score exposes calibrated and raw values. The product is self-hostable, workspace-scoped, and built for debugging failures instead of hiding them.
+          - generic [ref=e247]:
+            - generic [ref=e248]: FastAPI
+            - generic [ref=e249]: PostgreSQL RLS
+            - generic [ref=e250]: MinIO
+            - generic [ref=e251]: Celery
+            - generic [ref=e252]: Qdrant
+            - generic [ref=e253]: PDF.js Canvas
+        - generic [ref=e254]:
+          - img [ref=e255]
+          - heading "Core promise" [level=3] [ref=e258]
+          - paragraph [ref=e259]: Do not trust black-box document output. Inspect the crop, verify the rendered result, calibrate the score, and keep the correction loop attached to the source.
+    - generic [ref=e260]:
+      - generic [ref=e261]:
+        - generic [ref=e262]:
+          - paragraph [ref=e263]: Live studio
+          - heading "Parse and inspect a document" [level=2] [ref=e264]
+        - link "Back to overview" [ref=e265] [cursor=pointer]:
+          - /url: "#top"
+      - main [ref=e267]:
+        - generic [ref=e268]:
+          - generic [ref=e269]:
+            - generic [ref=e270]:
+              - img [ref=e272]
+              - generic [ref=e274]:
+                - heading "DocuMind Parse Studio" [level=1] [ref=e275]
+                - generic [ref=e276]:
+                  - generic [ref=e277]: no_parse_run
+                  - generic [ref=e278]: idle
+                  - generic [ref=e279]:
+                    - generic [ref=e280]: < 0.50
+                    - generic [ref=e282]: 0.50-0.69
+                    - generic [ref=e284]: 0.70-0.84
+            - generic [ref=e286]:
+              - generic [ref=e287] [cursor=pointer]:
+                - img [ref=e288]
+                - text: Upload
+                - button "Upload" [ref=e292]
+              - button "Run Parse" [disabled] [ref=e293]:
+                - img [ref=e294]
+                - text: Run Parse
+              - generic [ref=e297] [cursor=pointer]:
+                - img [ref=e298]
+                - checkbox "Heatmap" [checked] [ref=e300]
+                - text: Heatmap
+              - generic [ref=e301]:
+                - button "Zoom out" [ref=e302] [cursor=pointer]:
+                  - img [ref=e303]
+                - generic [ref=e306]: 100%
+                - button "Zoom in" [ref=e307] [cursor=pointer]:
+                  - img [ref=e308]
+          - generic [ref=e311]:
+            - generic [ref=e312]:
+              - img [ref=e314]
+              - generic [ref=e317]:
+                - generic [ref=e318]: Blocks
+                - generic [ref=e319]: "0"
+            - generic [ref=e320]:
+              - img [ref=e322]
+              - generic [ref=e325]:
+                - generic [ref=e326]: Avg Confidence
+                - generic [ref=e327]: "--"
+            - generic [ref=e328]:
+              - img [ref=e330]
+              - generic [ref=e332]:
+                - generic [ref=e333]: Review
+                - generic [ref=e334]: "0"
+            - generic [ref=e335]:
+              - img [ref=e337]
+              - generic [ref=e340]:
+                - generic [ref=e341]: Verifier
+                - generic [ref=e342]: "on"
+        - generic [ref=e343]:
+          - generic [ref=e344]:
+            - generic [ref=e346]:
+              - img [ref=e347]
+              - generic [ref=e350]: PDF Canvas
+              - generic [ref=e351]: waiting
+            - generic [ref=e353]:
+              - img [ref=e354]
+              - generic [ref=e356]: Upload a PDF to inspect live parse output
+              - paragraph [ref=e357]: The canvas will render real PDF pages and draw returned bbox citations here.
+          - generic [ref=e359]:
+            - generic [ref=e360]:
+              - generic [ref=e361]:
+                - generic [ref=e362]:
+                  - button "AST" [ref=e363] [cursor=pointer]:
+                    - img [ref=e364]
+                    - text: AST
+                  - button "Markdown" [ref=e369] [cursor=pointer]
+                - generic [ref=e370]:
+                  - img [ref=e371]
+                  - generic [ref=e373]: no block selected
+              - generic [ref=e375]:
+                - heading "JSON AST" [level=2] [ref=e377]
+                - generic [ref=e380]: Loading JSON editor
+            - complementary [ref=e381]:
+              - generic [ref=e382]:
+                - generic [ref=e383]:
+                  - heading "Extraction" [level=2] [ref=e384]
+                  - generic [ref=e385]: 0 fields
+                - paragraph [ref=e386]: Run extraction to inspect field citations.
+              - generic [ref=e387]:
+                - generic [ref=e388]:
+                  - generic [ref=e389]:
+                    - heading "Schema" [level=2] [ref=e390]
+                    - button "Add schema field" [ref=e391] [cursor=pointer]:
+                      - img [ref=e392]
+                  - generic [ref=e393]:
+                    - generic [ref=e394]:
+                      - textbox [ref=e395]: invoice_number
+                      - combobox [ref=e396]:
+                        - option "string" [selected]
+                        - option "number"
+                        - option "date"
+                      - button "Remove invoice_number" [ref=e397] [cursor=pointer]:
+                        - img [ref=e398]
+                    - generic [ref=e401]:
+                      - textbox [ref=e402]: total
+                      - combobox [ref=e403]:
+                        - option "string"
+                        - option "number" [selected]
+                        - option "date"
+                      - button "Remove total" [ref=e404] [cursor=pointer]:
+                        - img [ref=e405]
+                - generic [ref=e408]:
+                  - generic [ref=e409]:
+                    - img [ref=e410]
+                    - text: Review Queue
+                  - paragraph [ref=e412]: No flagged blocks
+  - button "Open Next.js Dev Tools" [ref=e418] [cursor=pointer]:
+    - img [ref=e419]

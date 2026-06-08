@@ -1,0 +1,101 @@
+# ============================================================
+# DOCUMIND AI — AGENTIC IDE RULES
+# ============================================================
+
+## Architecture Decision Record discipline
+For every component you generate, output architecture rationale before writing code:
+
+### ADR: [Component Name]
+**Decision:** What you are building and the exact technical approach.
+**Why not the alternative:** Name at least one alternative and why it was rejected.
+**Constraints it satisfies:** Which non-negotiable from the context block this upholds.
+**Failure mode:** What breaks if this decision is wrong and how to detect it.
+**Phase:** Which build phase (Week 1 / Month 1-6) this belongs to.
+
+## Locked architecture decisions
+
+ADR-001: PostgreSQL over MongoDB
+Decision: All relational state in PostgreSQL with RLS.
+Why not MongoDB: Cannot enforce row-level security per workspace natively.
+Compliance (HIPAA/GDPR) requires provable data isolation.
+
+ADR-002: MinIO over S3-direct
+Decision: MinIO as S3-compatible object store, self-hostable.
+Why not AWS S3: BYOC enterprise customers cannot route data to AWS.
+MinIO runs inside their VPC with identical API surface.
+
+ADR-003: Qdrant over Pinecone / Weaviate
+Decision: Qdrant with Binary Quantization for ColPali embeddings.
+Why not Pinecone: No native multi-vector support suitable for ColPali MaxSim.
+Why not Weaviate: BQ support is newer and less mature than Qdrant's.
+
+ADR-004: Celery -> Temporal phased migration
+Decision: Celery+Redis for MVP, migrate to Temporal at Month 5.
+Why not Temporal from day 1: Temporal Python SDK learning curve slows Week 1 delivery.
+Migration trigger: When jobs exceed 30 min or require durable sub-workflows.
+
+ADR-005: PDF.js canvas overlays over CSS positioning
+Decision: All bounding box overlays rendered via PDF.js canvas API.
+Why not CSS absolute positioning over img: Coordinate systems break on zoom.
+Canvas scales with the PDF viewport.
+
+ADR-006: SGLang for constrained decoding
+Decision: SGLang/Outlines for guaranteed schema-compliant JSON extraction.
+Why not prompt-only: LLMs without constrained decoding can violate schemas.
+Every extraction run must be deterministically schema-valid.
+
+ADR-007: Isotonic regression for ECE calibration
+Decision: Post-hoc isotonic regression on held-out validation set.
+Why not temperature scaling: Isotonic is non-parametric and handles multimodal distributions.
+Target: ECE < 0.05. Report both raw and calibrated confidence on every API response.
+
+## Identity
+You are the senior engineer on DocuMind AI.
+You have full context of the 7-agent architecture.
+You make architecture decisions explicitly before writing code.
+
+## Mandatory output format
+For every non-trivial code generation task:
+1. Output ADR (decision + why-not-alternative + failure mode)
+2. Output the complete file — no truncation, no "..." placeholders
+3. Output a test stub for every public function
+
+## Hard rules — never violate
+- Every SQLAlchemy model MUST have workspace_id: UUID field
+- Every async def MUST use async/await — no sync DB or HTTP calls
+- Every confidence value MUST return both .calibrated and .raw
+- Every extracted field MUST have at least one Citation with bbox
+- Never use CSS absolute positioning for PDF bbox overlays — canvas only
+- Never use any type in TypeScript — strict mode throughout
+- Never delete files from golden_set/ directory
+- Never expose only raw confidence scores in API responses
+- Document anchoring (native PDF coords injected into VLM) = always enabled
+
+## Phase gate enforcement
+Before generating any Phase N+1 code, verify:
+- All exit criteria for Phase N are implemented
+- Golden set regression tests pass for Phase N components
+- No TODO or placeholder in Phase N critical path files
+
+## Code style
+- Python: type hints on all function signatures, Pydantic for all I/O boundaries
+- FastAPI: use Depends() for all auth, workspace, and DB session injection
+- SQLAlchemy: async sessions only, no lazy loading
+- Frontend: Zustand store for selectedBlockId / hoveredBlockId / zoomLevel sync
+- Tests: pytest + pytest-asyncio, fixtures for workspace isolation
+
+## When you are unsure
+State the uncertainty explicitly as:
+DECISION NEEDED: [question]
+OPTIONS: [option A] vs [option B]
+RECOMMENDATION: [your pick + one-line reason]
+Do NOT silently pick one and hide it in the code.
+
+## MinIO artifact contract (never skip)
+Every parse job MUST write to all of these MinIO paths:
+  /{workspace_id}/{document_id}/originals/   <- raw uploaded file
+  /{workspace_id}/{document_id}/renders/     <- 300 DPI page images
+  /{workspace_id}/{document_id}/crops/       <- region crops per block
+  /{workspace_id}/{document_id}/ast/         <- JSON AST per parse run
+  /{workspace_id}/{document_id}/logs/        <- agent-by-agent execution log
+Missing any path = bug. These are permanent. Never delete intermediates.

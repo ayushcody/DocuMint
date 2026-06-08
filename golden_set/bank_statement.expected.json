@@ -1,0 +1,24 @@
+{
+  "doc_type": "bank_statement",
+  "page_count": 3,
+  "teds_threshold": 0.82,
+  "block_types": ["heading", "table", "text"],
+  "tables": [
+    {
+      "page": 2,
+      "html": "<table><tr><th>Date</th><th>Description</th><th>Amount</th><th>Balance</th></tr><tr><td>2024-02-01</td><td>Deposit</td><td>1200.00</td><td>5200.00</td></tr></table>",
+      "teds_threshold": 0.88
+    }
+  ],
+  "extraction": {
+    "account_holder": "Jordan Lee",
+    "account_last4": "4821",
+    "statement_period": "2024-02",
+    "ending_balance": 5200.0
+  },
+  "expected_confidence_calibrated_min": 0.74,
+  "retrieval": {
+    "query": "ending balance",
+    "expected_page": 3
+  }
+}

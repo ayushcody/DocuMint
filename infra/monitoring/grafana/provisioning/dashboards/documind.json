@@ -1,0 +1,20 @@
+{
+  "title": "DocuMind Pipeline",
+  "panels": [
+    {
+      "title": "Agent Timing",
+      "type": "timeseries",
+      "targets": []
+    },
+    {
+      "title": "Per-Tenant Cost",
+      "type": "timeseries",
+      "targets": []
+    },
+    {
+      "title": "GPU Utilisation",
+      "type": "timeseries",
+      "targets": []
+    }
+  ]
+}

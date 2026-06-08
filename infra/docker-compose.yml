@@ -1,0 +1,175 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: documind
+      POSTGRES_USER: documind
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U documind -d documind"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  minio:
+    image: minio/minio:RELEASE.2024-06-13T22-53-53Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: documind
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD required}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  qdrant:
+    image: qdrant/qdrant:v1.9.5
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  migrate:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://documind:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}@postgres:5432/documind
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["alembic", "upgrade", "head"]
+
+  api:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://documind:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}@postgres:5432/documind
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT_URL: http://minio:9000
+      MINIO_ACCESS_KEY_ID: documind
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_SECRET_ACCESS_KEY:?MINIO_SECRET_ACCESS_KEY required}
+      MINIO_BUCKET: documind
+      DOCUMINT_JWT_SECRET: ${DOCUMINT_JWT_SECRET:?DOCUMINT_JWT_SECRET is required}
+      DOCUMINT_JWT_ALGORITHM: ${DOCUMINT_JWT_ALGORITHM:-HS256}
+      DOCUMINT_JWT_AUDIENCE: ${DOCUMINT_JWT_AUDIENCE:-documint-api}
+      DOCUMINT_DEV_MODE: ${DOCUMINT_DEV_MODE:-false}
+      DOCUMINT_PROFILE: ${DOCUMINT_PROFILE:-full}
+      DOCUMINT_MINERU_ENDPOINT: ${DOCUMINT_MINERU_ENDPOINT:-}
+      DOCUMINT_MINERU_MODEL: ${DOCUMINT_MINERU_MODEL:-mineru-2.5-pro}
+      DOCUMINT_MINERU_USE_DOCLING: ${DOCUMINT_MINERU_USE_DOCLING:-true}
+      DOCUMINT_OLMOCR_STUB: ${DOCUMINT_OLMOCR_STUB:-false}
+      DOCUMINT_OLMOCR_FAIL_CLOSED: ${DOCUMINT_OLMOCR_FAIL_CLOSED:-false}
+      DOCUMINT_VERIFIER_PIL_FALLBACK: ${DOCUMINT_VERIFIER_PIL_FALLBACK:-false}
+      DOCUMINT_LAYOUT_BACKEND: ${DOCUMINT_LAYOUT_BACKEND:-docling}
+      DOCUMINT_EXTRACTION_BACKEND: ${DOCUMINT_EXTRACTION_BACKEND:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DOCUMINT_EXTRACTION_ENDPOINT: ${DOCUMINT_EXTRACTION_ENDPOINT:-}
+      DOCUMINT_EXTRACTION_MODEL: ${DOCUMINT_EXTRACTION_MODEL:-qwen2.5:1.5b}
+      DOCUMINT_CLASSIFY_MODEL: ${DOCUMINT_CLASSIFY_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      DOCUMINT_CLASSIFY_ALLOW_LEXICAL_FALLBACK: ${DOCUMINT_CLASSIFY_ALLOW_LEXICAL_FALLBACK:-true}
+      DOCUMINT_SPLIT_THRESHOLD: ${DOCUMINT_SPLIT_THRESHOLD:-0.35}
+      DOCUMINT_MODEL_CACHE_DIR: ${DOCUMINT_MODEL_CACHE_DIR:-/models}
+      DOCUMINT_COLPALI_MODEL: ${DOCUMINT_COLPALI_MODEL:-vidore/colqwen2-v1.0}
+      DOCUMINT_COLPALI_OFFLINE: ${DOCUMINT_COLPALI_OFFLINE:-false}
+    ports:
+      - "8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  worker:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://documind:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}@postgres:5432/documind
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT_URL: http://minio:9000
+      MINIO_ACCESS_KEY_ID: documind
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_SECRET_ACCESS_KEY:?MINIO_SECRET_ACCESS_KEY required}
+      MINIO_BUCKET: documind
+      DOCUMINT_JWT_SECRET: ${DOCUMINT_JWT_SECRET:?DOCUMINT_JWT_SECRET is required}
+      DOCUMINT_JWT_ALGORITHM: ${DOCUMINT_JWT_ALGORITHM:-HS256}
+      DOCUMINT_JWT_AUDIENCE: ${DOCUMINT_JWT_AUDIENCE:-documint-api}
+      DOCUMINT_DEV_MODE: ${DOCUMINT_DEV_MODE:-false}
+      DOCUMINT_PROFILE: ${DOCUMINT_PROFILE:-full}
+      DOCUMINT_MINERU_ENDPOINT: ${DOCUMINT_MINERU_ENDPOINT:-}
+      DOCUMINT_MINERU_MODEL: ${DOCUMINT_MINERU_MODEL:-mineru-2.5-pro}
+      DOCUMINT_MINERU_USE_DOCLING: ${DOCUMINT_MINERU_USE_DOCLING:-true}
+      DOCUMINT_OLMOCR_STUB: ${DOCUMINT_OLMOCR_STUB:-false}
+      DOCUMINT_OLMOCR_FAIL_CLOSED: ${DOCUMINT_OLMOCR_FAIL_CLOSED:-false}
+      DOCUMINT_VERIFIER_PIL_FALLBACK: ${DOCUMINT_VERIFIER_PIL_FALLBACK:-false}
+      DOCUMINT_LAYOUT_BACKEND: ${DOCUMINT_LAYOUT_BACKEND:-docling}
+      DOCUMINT_EXTRACTION_BACKEND: ${DOCUMINT_EXTRACTION_BACKEND:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DOCUMINT_EXTRACTION_ENDPOINT: ${DOCUMINT_EXTRACTION_ENDPOINT:-}
+      DOCUMINT_EXTRACTION_MODEL: ${DOCUMINT_EXTRACTION_MODEL:-qwen2.5:1.5b}
+      DOCUMINT_CLASSIFY_MODEL: ${DOCUMINT_CLASSIFY_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      DOCUMINT_CLASSIFY_ALLOW_LEXICAL_FALLBACK: ${DOCUMINT_CLASSIFY_ALLOW_LEXICAL_FALLBACK:-true}
+      DOCUMINT_SPLIT_THRESHOLD: ${DOCUMINT_SPLIT_THRESHOLD:-0.35}
+      DOCUMINT_MODEL_CACHE_DIR: ${DOCUMINT_MODEL_CACHE_DIR:-/models}
+      DOCUMINT_COLPALI_MODEL: ${DOCUMINT_COLPALI_MODEL:-vidore/colqwen2-v1.0}
+      DOCUMINT_COLPALI_OFFLINE: ${DOCUMINT_COLPALI_OFFLINE:-false}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    command: ["celery", "-A", "celery_app.celery_app", "worker", "--loglevel=INFO"]
+
+  flower:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - worker
+    command: ["celery", "-A", "celery_app.celery_app", "flower", "--port=5555"]
+
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    ports:
+      - "3002:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD:?GF_SECURITY_ADMIN_PASSWORD required}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+
+volumes:
+  postgres_data:
+  minio_data:
+  qdrant_data:
+  grafana_data:

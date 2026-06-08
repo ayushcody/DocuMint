@@ -1,0 +1,23 @@
+{
+  "doc_type": "academic_paper",
+  "page_count": 10,
+  "teds_threshold": 0.78,
+  "block_types": ["heading", "text", "formula", "figure", "table"],
+  "tables": [
+    {
+      "page": 5,
+      "html": "<table><tr><th>Model</th><th>Accuracy</th></tr><tr><td>Baseline</td><td>0.81</td></tr></table>",
+      "teds_threshold": 0.82
+    }
+  ],
+  "extraction": {
+    "title": "Efficient Document Understanding",
+    "first_author": "A. Researcher",
+    "year": "2024"
+  },
+  "expected_confidence_calibrated_min": 0.70,
+  "retrieval": {
+    "query": "experimental results accuracy",
+    "expected_page": 5
+  }
+}
