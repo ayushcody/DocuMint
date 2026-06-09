@@ -110,6 +110,7 @@ export type ParseRunState =
   | "queued"
   | "running"
   | "intake_complete"
+  | "complete"
   | "succeeded"
   | "failed"
   | "cancelled";
@@ -163,4 +164,78 @@ export interface RetrievalResult {
   block_ids: string[];
   bbox?: BBox;
   image_patch_path?: string;
+}
+
+export type SchemaFieldType = "string" | "number" | "boolean" | "date";
+
+export interface ExtractionSchemaField {
+  id?: string;
+  name: string;
+  type: SchemaFieldType;
+  description: string;
+  required: boolean;
+}
+
+export interface ExtractionSchemaCreateResponse {
+  schema_id: string;
+  id?: string;
+}
+
+export interface ClassificationCategory {
+  id?: string;
+  label: string;
+  description: string;
+  color: string;
+}
+
+export interface ClassificationResult {
+  page_num: number;
+  label: string;
+  confidence: number;
+  scores: Record<string, number>;
+  model?: string;
+}
+
+export interface ClassificationRunResponse {
+  status: string;
+  classifications?: ClassificationResult[];
+  results?: ClassificationResult[];
+}
+
+export interface SplitSegment {
+  start_page: number;
+  end_page: number;
+  label: string;
+  confidence: number;
+  evidence?: string;
+  semantic_coherence?: number;
+}
+
+export interface SplitRunResponse {
+  status: string;
+  segments?: SplitSegment[];
+  result_segments?: SplitSegment[];
+}
+
+export interface IndexCollection {
+  collection_id: string;
+  id?: string;
+  name: string;
+  page_count: number;
+  embedding_model: string;
+}
+
+export interface IndexCollectionsResponse {
+  collections?: IndexCollection[];
+}
+
+export interface IndexCollectionCreateResponse {
+  collection_id: string;
+  id?: string;
+  status: string;
+}
+
+export interface IndexSyncResponse {
+  status: string;
+  pages_to_index?: number;
 }
